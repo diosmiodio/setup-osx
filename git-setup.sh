@@ -96,8 +96,6 @@ if [[ "$desired" == "0" ]]; then
     exit 0
 fi
 
-git config --global init.defaultBranch main
-
 to_add=$((desired - existing))
 [[ $to_add -lt 0 ]] && to_add=0
 

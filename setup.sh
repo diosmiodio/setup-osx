@@ -243,6 +243,28 @@ configure_finder() {
     mark_installed
 }
 
+configure_git_defaults() {
+    local editor branch_changed=false editor_changed=false
+
+    if [[ "$(git config --global init.defaultBranch 2>/dev/null)" != "main" ]]; then
+        git config --global init.defaultBranch main
+        branch_changed=true
+    fi
+
+    editor="$(git config --global core.editor 2>/dev/null)"
+    if [[ "$editor" != "nano" ]]; then
+        git config --global core.editor "nano"
+        editor_changed=true
+    fi
+
+    if $branch_changed || $editor_changed; then
+        log "Complete."
+        mark_installed
+    else
+        log_skip
+    fi
+}
+
 install_aliases() {
     local zshrc="$HOME/.zshrc"
     local script_dir
@@ -290,6 +312,7 @@ app_steps=(
 )
 
 pref_steps=(
+    "custom:git-defaults"
     "custom:aliases"
     "custom:finder"
 )
@@ -305,11 +328,12 @@ run_step() {
         formula) install_formula "$name" ;;
         custom)
             case "$name" in
-                uv)          install_uv ;;
-                nvm)         install_nvm ;;
-                claude-code) install_claude_code ;;
-                aliases)     install_aliases ;;
-                finder)      configure_finder ;;
+                uv)           install_uv ;;
+                nvm)          install_nvm ;;
+                claude-code)  install_claude_code ;;
+                git-defaults) configure_git_defaults ;;
+                aliases)      install_aliases ;;
+                finder)       configure_finder ;;
             esac
             ;;
     esac
