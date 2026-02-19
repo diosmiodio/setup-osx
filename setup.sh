@@ -223,21 +223,44 @@ install_claude_code() {
 }
 
 configure_finder() {
-    local pathbar show_hidden view_style
+    local pathbar show_hidden view_style prefs_changed=false
     pathbar="$(defaults read com.apple.finder ShowPathbar 2>/dev/null)"
     show_hidden="$(defaults read com.apple.finder AppleShowAllFiles 2>/dev/null)"
     view_style="$(defaults read com.apple.finder FXPreferredViewStyle 2>/dev/null)"
 
-    if [[ "$pathbar" == "1" && "$show_hidden" == "1" && "$view_style" == "Nlsv" ]]; then
+    if [[ "$pathbar" != "1" || "$show_hidden" != "1" || "$view_style" != "Nlsv" ]]; then
+        defaults write com.apple.finder ShowPathbar -bool true
+        defaults write com.apple.finder AppleShowAllFiles -bool true
+        defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+        prefs_changed=true
+    fi
+
+    # Always remove .DS_Store files so per-folder view overrides are cleared
+    # and the default list view applies everywhere
+    log "Clearing per-folder view settings..."
+    find "$HOME" -name ".DS_Store" -delete 2>/dev/null
+
+    killall Finder 2>/dev/null
+
+    if [[ "$prefs_changed" == true ]]; then
+        log "Complete."
+        mark_installed
+    else
+        log "View settings refreshed."
+        mark_installed
+    fi
+}
+
+configure_sound() {
+    local feedback
+    feedback="$(defaults read NSGlobalDomain com.apple.sound.beep.feedback 2>/dev/null)"
+
+    if [[ "$feedback" == "1" ]]; then
         log_skip
         return
     fi
 
-    defaults write com.apple.finder ShowPathbar -bool true
-    defaults write com.apple.finder AppleShowAllFiles -bool true
-    defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
-
-    killall Finder 2>/dev/null
+    defaults write NSGlobalDomain com.apple.sound.beep.feedback -bool true
 
     log "Complete."
     mark_installed
@@ -315,6 +338,7 @@ pref_steps=(
     "custom:git-defaults"
     "custom:aliases"
     "custom:finder"
+    "custom:sound"
 )
 
 # ── Runners ──────────────────────────────────────────────
@@ -334,6 +358,7 @@ run_step() {
                 git-defaults) configure_git_defaults ;;
                 aliases)      install_aliases ;;
                 finder)       configure_finder ;;
+                sound)        configure_sound ;;
             esac
             ;;
     esac
