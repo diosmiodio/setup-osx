@@ -3,6 +3,14 @@
 # macOS Setup Script
 # Installs applications, CLI tools, and shell aliases via Homebrew
 
+# ── Colors ───────────────────────────────────────────────
+
+bold="\033[1m"
+dim="\033[2m"
+cyan="\033[36m"
+white="\033[37m"
+reset="\033[0m"
+
 # ── Counters ──────────────────────────────────────────────
 
 installed=0
@@ -15,6 +23,70 @@ mark_failed()    { ((failed++)); }
 
 log()      { echo "         -> $1"; }
 log_skip() { log "Already installed, skipping."; mark_skipped; }
+
+# ── Menu ─────────────────────────────────────────────────
+
+select_menu() {
+    local options=("$@")
+    local count=${#options[@]}
+    local selected=0
+
+    # Hide cursor
+    tput civis 2>/dev/null
+
+    # Restore cursor on exit
+    trap 'tput cnorm 2>/dev/null' EXIT
+
+    # Draw menu
+    draw_menu() {
+        # Move cursor up to redraw (skip on first draw)
+        if [[ "$1" == "redraw" ]]; then
+            tput cuu "$count" 2>/dev/null
+        fi
+
+        for i in "${!options[@]}"; do
+            tput el 2>/dev/null  # clear line
+            if [[ $i -eq $selected ]]; then
+                printf "  ${cyan}${bold}❯ %s${reset}\n" "${options[$i]}"
+            else
+                printf "  ${dim}  %s${reset}\n" "${options[$i]}"
+            fi
+        done
+    }
+
+    draw_menu "first"
+
+    # Read keypresses
+    while true; do
+        read -rsn1 key
+
+        case "$key" in
+            $'\x1b')  # escape sequence
+                read -rsn2 seq
+                case "$seq" in
+                    '[A')  # up
+                        ((selected--))
+                        [[ $selected -lt 0 ]] && selected=$((count - 1))
+                        ;;
+                    '[B')  # down
+                        ((selected++))
+                        [[ $selected -ge $count ]] && selected=0
+                        ;;
+                esac
+                draw_menu "redraw"
+                ;;
+            '')  # enter
+                break
+                ;;
+        esac
+    done
+
+    # Show cursor
+    tput cnorm 2>/dev/null
+    trap - EXIT
+
+    menu_result=$selected
+}
 
 # ── Homebrew ──────────────────────────────────────────────
 
@@ -177,19 +249,21 @@ install_aliases() {
     script_dir="$(cd "$(dirname "$0")" && pwd)"
 
     if grep -q "# --- mac-setup aliases ---" "$zshrc" 2>/dev/null; then
-        log "Already configured, skipping."
-        mark_skipped
+        log "Updating aliases in ~/.zshrc..."
+        # Remove the old block (everything between the guard comments, inclusive)
+        sed -i '' '/^# --- mac-setup aliases ---$/,/^# --- end mac-setup aliases ---$/d' "$zshrc"
     else
         log "Adding to ~/.zshrc..."
-        cat "$script_dir/aliases.sh" >> "$zshrc"
-        log "Complete."
-        mark_installed
     fi
+
+    cat "$script_dir/aliases.sh" >> "$zshrc"
+    log "Complete."
+    mark_installed
 }
 
 # ── Steps ─────────────────────────────────────────────────
 
-install_steps=(
+app_steps=(
     # GUI apps
     "cask:rectangle-pro"
     "cask:1password"
@@ -213,60 +287,109 @@ install_steps=(
     "custom:uv"
     "custom:nvm"
     "custom:claude-code"
+)
+
+pref_steps=(
     "custom:aliases"
     "custom:finder"
 )
 
-# ── Main ──────────────────────────────────────────────────
+# ── Runners ──────────────────────────────────────────────
 
-setup_homebrew
-
-total=${#install_steps[@]}
-current=0
-
-echo ""
-echo "Setting up $total items..."
-echo ""
-
-for step in "${install_steps[@]}"; do
-    type="${step%%:*}"
-    name="${step#*:}"
-    ((current++))
-    echo "[$current/$total] $name"
+run_step() {
+    local type="${1%%:*}"
+    local name="${1#*:}"
 
     case "$type" in
         cask)    install_cask "$name" ;;
         formula) install_formula "$name" ;;
         custom)
             case "$name" in
-                uv)         install_uv ;;
-                nvm)        install_nvm ;;
+                uv)          install_uv ;;
+                nvm)         install_nvm ;;
                 claude-code) install_claude_code ;;
-                aliases)    install_aliases ;;
-                finder)     configure_finder ;;
+                aliases)     install_aliases ;;
+                finder)      configure_finder ;;
             esac
             ;;
     esac
+}
+
+run_steps() {
+    eval 'local steps=("${'"$1"'[@]}")'
+    local total=${#steps[@]}
+    local current=0
+
     echo ""
-done
+    for step in "${steps[@]}"; do
+        local name="${step#*:}"
+        ((current++))
+        echo "[$current/$total] $name"
+        run_step "$step"
+        echo ""
+    done
+}
 
-echo "================================"
-echo " Install complete!"
-echo " Installed: $installed"
-echo " Skipped:   $skipped"
-echo " Failed:    $failed"
-echo "================================"
+aliases_changed=false
 
-# ── Account Setup ────────────────────────────────────────
+run_applications() {
+    setup_homebrew
+    run_steps app_steps
+}
+
+run_preferences() {
+    aliases_changed=true
+    run_steps pref_steps
+}
+
+run_account_setup() {
+    echo ""
+    echo "────────────────────────────────"
+    echo " Account Setup"
+    echo "────────────────────────────────"
+    echo ""
+
+    local script_dir
+    script_dir="$(cd "$(dirname "$0")" && pwd)"
+    bash "$script_dir/git-setup.sh"
+}
+
+print_summary() {
+    if [[ $((installed + skipped + failed)) -gt 0 ]]; then
+        echo "================================"
+        echo " Complete!"
+        echo " Installed: $installed"
+        echo " Skipped:   $skipped"
+        echo " Failed:    $failed"
+        echo "================================"
+    fi
+
+    if [[ "$aliases_changed" == true ]]; then
+        echo ""
+        printf "${dim}Hint: To use your aliases in this terminal session, you must run 'source ~/.zshrc'.${reset}\n"
+        echo ""
+    fi
+}
+
+# ── Main ──────────────────────────────────────────────────
 
 echo ""
-echo "────────────────────────────────"
-echo " Account Setup"
-echo "────────────────────────────────"
+printf "  ${bold}${white}┃ Setup ┃${reset}\n"
 echo ""
 
-script_dir="$(cd "$(dirname "$0")" && pwd)"
-bash "$script_dir/git-setup.sh"
+select_menu "Applications" "Preferences" "Accounts" "All"
 
 echo ""
-echo "Run 'source ~/.zshrc' or open a new terminal to use your aliases."
+
+case $menu_result in
+    0) run_applications ;;
+    1) run_preferences ;;
+    2) run_account_setup ;;
+    3)
+        run_applications
+        run_preferences
+        run_account_setup
+        ;;
+esac
+
+print_summary
