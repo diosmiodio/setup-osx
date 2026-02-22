@@ -26,6 +26,9 @@ alias uvi='uv init'
 alias uva='uv add'
 alias py='python3'
 
+# Claude
+alias claude='cd ~/dev && claude'
+
 # Misc
 alias c='clear'
 alias reload='source ~/.zshrc'
@@ -60,6 +63,9 @@ help() {
       echo "    uvi    uv init                     Initialize a new Python project"
       echo "    uva    uv add                      Add a dependency"
       echo "    py     python3                     Shortcut for python3"
+      echo ""
+      echo "  \033[1;36mClaude\033[0m"
+      echo "    claude cd ~/dev && claude          Open Claude Code in ~/dev"
       echo ""
       echo "  \033[1;36mMisc\033[0m"
       echo "    c      clear                       Clear terminal"
