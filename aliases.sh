@@ -17,6 +17,7 @@ alias ll='ls -la'
 alias la='ls -A'
 alias ..='cd ..'
 alias ...='cd ../..'
+alias home='cd ~'
 alias dev='cd ~/dev'
 alias projects='cd ~/dev/projects'
 
@@ -55,6 +56,7 @@ help() {
       echo "    la     ls -A                       List all including hidden"
       echo "    ..     cd ..                       Go up one directory"
       echo "    ...    cd ../..                    Go up two directories"
+      echo "    home   cd ~                        Jump to home directory"
       echo "    dev    cd ~/dev                    Jump to dev directory"
       echo "    projects  cd ~/dev/projects        Jump to projects directory"
       echo ""

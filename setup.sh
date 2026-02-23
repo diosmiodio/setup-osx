@@ -235,10 +235,12 @@ configure_finder() {
         prefs_changed=true
     fi
 
-    # Always remove .DS_Store files so per-folder view overrides are cleared
-    # and the default list view applies everywhere
+    # Remove .DS_Store files in key directories so per-folder view overrides
+    # are cleared and the default list view applies
     log "Clearing per-folder view settings..."
-    find "$HOME" -name ".DS_Store" -delete 2>/dev/null
+    for dir in "$HOME/Desktop" "$HOME/Documents" "$HOME/Downloads" "$HOME/dev"; do
+        [[ -d "$dir" ]] && find "$dir" -name ".DS_Store" -delete 2>/dev/null
+    done
 
     killall Finder 2>/dev/null
 
@@ -426,19 +428,76 @@ echo ""
 printf "  ${bold}${white}┃ Setup ┃${reset}\n"
 echo ""
 
-select_menu "Applications" "Preferences" "Accounts" "All"
+printf "  ${bold}Is this a work machine?${reset}\n"
+echo ""
+select_menu "Yes" "No"
+is_work=$menu_result
 
 echo ""
 
-case $menu_result in
-    0) run_applications ;;
-    1) run_preferences ;;
-    2) run_account_setup ;;
-    3)
-        run_applications
-        run_preferences
-        run_account_setup
-        ;;
-esac
+if [[ $is_work -eq 0 ]]; then
+    # Source work-specific setup functions
+    script_dir="$(cd "$(dirname "$0")" && pwd)"
+    source "$script_dir/work-setup.sh"
+
+    printf "  ${bold}${white}What would you like to set up?${reset}\n"
+    echo ""
+    select_menu \
+        "Personal: Applications" \
+        "Personal: Preferences" \
+        "Personal: Accounts" \
+        "Personal: All" \
+        "Work: Applications" \
+        "Work: Preferences" \
+        "Work: Accounts" \
+        "Work: All" \
+        "Install Everything"
+
+    echo ""
+
+    case $menu_result in
+        0) run_applications ;;
+        1) run_preferences ;;
+        2) run_account_setup ;;
+        3)
+            run_applications
+            run_preferences
+            run_account_setup
+            ;;
+        4) run_work_applications ;;
+        5) run_work_preferences ;;
+        6) run_work_account_setup ;;
+        7)
+            run_work_applications
+            run_work_preferences
+            run_work_account_setup
+            ;;
+        8)
+            run_applications
+            run_preferences
+            run_account_setup
+            run_work_applications
+            run_work_preferences
+            run_work_account_setup
+            ;;
+    esac
+else
+    printf "  ${bold}${white}What would you like to set up?${reset}\n"
+    echo ""
+    select_menu "Applications" "Preferences" "Accounts" "All"
+
+    echo ""
+
+    case $menu_result in
+        0) run_applications ;;
+        1) run_preferences ;;
+        2) run_account_setup ;;
+        3)
+            run_applications
+            run_preferences
+            run_account_setup
+            ;;
+    esac
+fi
 
 print_summary
