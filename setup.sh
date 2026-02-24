@@ -280,6 +280,24 @@ configure_sound() {
     mark_installed
 }
 
+configure_dock() {
+    local delay anim prefs_changed=false
+    delay="$(defaults read com.apple.dock autohide-delay 2>/dev/null)"
+    anim="$(defaults read com.apple.dock autohide-time-modifier 2>/dev/null)"
+
+    if [[ "$delay" == "0" && "$anim" == "0.35" ]]; then
+        log_skip
+        return
+    fi
+
+    defaults write com.apple.dock autohide-delay -float 0
+    defaults write com.apple.dock autohide-time-modifier -float 0.35
+    killall Dock 2>/dev/null
+
+    log "Complete."
+    mark_installed
+}
+
 configure_steermouse() {
     local script_dir
     script_dir="$(cd "$(dirname "$0")" && pwd)"
@@ -400,6 +418,7 @@ pref_steps=(
     "custom:aliases"
     "custom:finder"
     "custom:sound"
+    "custom:dock"
     "custom:steermouse"
     "custom:rectangle-pro"
 )
@@ -422,6 +441,7 @@ run_step() {
                 aliases)        install_aliases ;;
                 finder)         configure_finder ;;
                 sound)          configure_sound ;;
+                dock)           configure_dock ;;
                 steermouse)     configure_steermouse ;;
                 rectangle-pro)  configure_rectangle_pro ;;
             esac

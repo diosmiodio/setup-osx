@@ -79,6 +79,7 @@ All personal options plus additional work-specific categories:
 | Shell aliases | Appended to `~/.zshrc` (see [Aliases](#aliases) below) |
 | Finder | Show path bar, show hidden files, list view, clear `.DS_Store` overrides |
 | Sound | Enable volume change feedback sound |
+| Dock | Instant auto-hide delay, animation duration 0.35s |
 | SteerMouse | Imports saved mouse button and scroll preferences |
 | Rectangle Pro | Restores window management config from saved JSON |
 
