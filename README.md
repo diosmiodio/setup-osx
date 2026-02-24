@@ -56,7 +56,7 @@ All personal options plus additional work-specific categories:
 | Rider | `rider` |
 | Discord | `discord` |
 | Fork | `fork` |
-| Logi Options+ | `logi-options+` |
+| SteerMouse | `steermouse` |
 
 ### CLI Tools
 
@@ -199,7 +199,6 @@ Some applications require post-install actions (e.g., a reboot). These are colle
 ================================
 
 ── Notes ──────────────────────
- • Reboot required for Logi Options+ to take effect.
  • Run 'source ~/.zshrc' to use your aliases in this terminal session.
 ```
 

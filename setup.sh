@@ -128,13 +128,13 @@ get_app_name() {
         rider)         echo "Rider.app" ;;
         discord)       echo "Discord.app" ;;
         fork)          echo "Fork.app" ;;
-        logi-options+) echo "logioptionsplus.app" ;;
+        steermouse)     echo "SteerMouse.app" ;;
     esac
 }
 
 get_install_note() {
     case "$1" in
-        logi-options+) echo "Reboot required for Logi Options+ to take effect." ;;
+        *) ;;
     esac
 }
 
@@ -336,7 +336,7 @@ app_steps=(
     "cask:rider"
     "cask:discord"
     "cask:fork"
-    "cask:logi-options+"
+    "cask:steermouse"
     # CLI tools
     "formula:git"
     "formula:gh"
