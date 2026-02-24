@@ -79,6 +79,8 @@ All personal options plus additional work-specific categories:
 | Shell aliases | Appended to `~/.zshrc` (see [Aliases](#aliases) below) |
 | Finder | Show path bar, show hidden files, list view, clear `.DS_Store` overrides |
 | Sound | Enable volume change feedback sound |
+| SteerMouse | Imports saved mouse button and scroll preferences |
+| Rectangle Pro | Restores window management config from saved JSON |
 
 ## Aliases
 
@@ -180,6 +182,7 @@ git-setup.sh      Interactive git identity and GitHub auth setup
 aliases.sh        Personal shell aliases (appended to ~/.zshrc)
 aliases-work.sh   Work shell aliases (appended to ~/.zshrc)
 aliases.md        Alias and CLI tools reference
+_preferences/     Saved app configs restored during Preferences setup
 ```
 
 ## Re-running

@@ -280,6 +280,52 @@ configure_sound() {
     mark_installed
 }
 
+configure_steermouse() {
+    local script_dir
+    script_dir="$(cd "$(dirname "$0")" && pwd)"
+    local prefs_dir="$script_dir/_preferences"
+    local changed=false
+
+    for domain_suffix in app boa; do
+        local src="$prefs_dir/SteerMouse-${domain_suffix}.plist"
+        local domain="jp.plentycom.${domain_suffix}.SteerMouse"
+
+        if [[ ! -f "$src" ]]; then
+            log "Missing $src, skipping."
+            continue
+        fi
+
+        defaults import "$domain" "$src"
+        changed=true
+    done
+
+    if $changed; then
+        log "Complete."
+        mark_installed
+    else
+        log_skip
+    fi
+}
+
+configure_rectangle_pro() {
+    local script_dir
+    script_dir="$(cd "$(dirname "$0")" && pwd)"
+    local src="$script_dir/_preferences/RectangleProConfig.json"
+    local dest="$HOME/Library/Application Support/Rectangle Pro/RectangleProConfig.json"
+
+    if [[ ! -f "$src" ]]; then
+        log "Missing $src, skipping."
+        mark_failed
+        return
+    fi
+
+    mkdir -p "$(dirname "$dest")"
+    cp "$src" "$dest"
+
+    log "Complete."
+    mark_installed
+}
+
 configure_git_defaults() {
     local editor branch_changed=false editor_changed=false
 
@@ -354,6 +400,8 @@ pref_steps=(
     "custom:aliases"
     "custom:finder"
     "custom:sound"
+    "custom:steermouse"
+    "custom:rectangle-pro"
 )
 
 # ── Runners ──────────────────────────────────────────────
@@ -367,13 +415,15 @@ run_step() {
         formula) install_formula "$name" ;;
         custom)
             case "$name" in
-                uv)           install_uv ;;
-                nvm)          install_nvm ;;
-                claude-code)  install_claude_code ;;
-                git-defaults) configure_git_defaults ;;
-                aliases)      install_aliases ;;
-                finder)       configure_finder ;;
-                sound)        configure_sound ;;
+                uv)             install_uv ;;
+                nvm)            install_nvm ;;
+                claude-code)    install_claude_code ;;
+                git-defaults)   configure_git_defaults ;;
+                aliases)        install_aliases ;;
+                finder)         configure_finder ;;
+                sound)          configure_sound ;;
+                steermouse)     configure_steermouse ;;
+                rectangle-pro)  configure_rectangle_pro ;;
             esac
             ;;
     esac
