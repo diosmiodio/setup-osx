@@ -16,10 +16,12 @@ reset="\033[0m"
 installed=0
 skipped=0
 failed=0
+notes=()
 
 mark_installed() { ((installed++)); }
 mark_skipped()   { ((skipped++)); }
 mark_failed()    { ((failed++)); }
+add_note()       { notes+=("$1"); }
 
 log()      { echo "         -> $1"; }
 log_skip() { log "Already installed, skipping."; mark_skipped; }
@@ -126,6 +128,13 @@ get_app_name() {
         rider)         echo "Rider.app" ;;
         discord)       echo "Discord.app" ;;
         fork)          echo "Fork.app" ;;
+        logi-options+) echo "logioptionsplus.app" ;;
+    esac
+}
+
+get_install_note() {
+    case "$1" in
+        logi-options+) echo "Reboot required for Logi Options+ to take effect." ;;
     esac
 }
 
@@ -147,6 +156,9 @@ install_cask() {
                 log "Installing..."
                 log "Complete."
                 mark_installed
+                local note
+                note="$(get_install_note "$1")"
+                [[ -n "$note" ]] && add_note "$note"
             else
                 log "FAILED during install."
                 mark_failed
@@ -324,6 +336,7 @@ app_steps=(
     "cask:rider"
     "cask:discord"
     "cask:fork"
+    "cask:logi-options+"
     # CLI tools
     "formula:git"
     "formula:gh"
@@ -416,10 +429,18 @@ print_summary() {
     fi
 
     if [[ "$aliases_changed" == true ]]; then
-        echo ""
-        printf "${dim}Hint: To use your aliases in this terminal session, you must run 'source ~/.zshrc'.${reset}\n"
-        echo ""
+        add_note "Run 'source ~/.zshrc' to use your aliases in this terminal session."
     fi
+
+    if [[ ${#notes[@]} -gt 0 ]]; then
+        echo ""
+        echo "── Notes ──────────────────────"
+        for note in "${notes[@]}"; do
+            printf " ${dim}• %s${reset}\n" "$note"
+        done
+    fi
+
+    echo ""
 }
 
 # ── Main ──────────────────────────────────────────────────

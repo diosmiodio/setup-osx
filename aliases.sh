@@ -74,6 +74,9 @@ help() {
       echo "    reload source ~/.zshrc             Reload shell config"
       echo "    zshrc  open ~/.zshrc               Edit shell config in Sublime"
       echo ""
+      echo "  \033[1;36mWork (Meta)\033[0m"
+      echo "    mhs    rl --editor run             Checkout stable tag & run UE editor"
+      echo ""
       ;;
     git)
       echo ""
