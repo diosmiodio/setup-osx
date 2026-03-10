@@ -142,6 +142,15 @@ After installing, run `source ~/.zshrc` or open a new terminal to activate them.
 
 Installed only on work machines, in a separate guard block.
 
+**PATH exports:**
+
+| Export | Description |
+|--------|-------------|
+| `fbsource/xplat/third-party/node/bin` | Meta's internal Node/NPM |
+| `fbsource/xplat/third-party/yarn` | Meta's internal Yarn |
+
+**Aliases:**
+
 | Alias | Command |
 |-------|---------|
 | `mhs` | Checkout `remote/rl/worlds/stable` in fbsource and run UE editor |
