@@ -76,6 +76,8 @@ help() {
       echo ""
       echo "  \033[1;36mWork (Meta)\033[0m"
       echo "    mhs    rl --editor run             Checkout stable tag & run UE editor"
+      echo "    mhe    cd .../ouro/mhe             Jump to MHE project root"
+      echo "    oma    cd .../ouro_multiplayer_action  Jump to OMA blueprint"
       echo ""
       ;;
     git)

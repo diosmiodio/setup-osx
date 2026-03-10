@@ -154,6 +154,8 @@ Installed only on work machines, in a separate guard block.
 | Alias | Command |
 |-------|---------|
 | `mhs` | Checkout `remote/rl/worlds/stable` in fbsource and run UE editor |
+| `mhe` | Jump to MHE project root in fbsource |
+| `oma` | Jump to OMA blueprint directory |
 
 ### Built-in Help
 
