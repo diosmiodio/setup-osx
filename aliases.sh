@@ -77,7 +77,7 @@ help() {
       echo "    zshrc  open ~/.zshrc               Edit shell config in Sublime"
       echo ""
       echo "  \033[1;36mWork (Meta)\033[0m"
-      echo "    claude cd ~/dev && claude --dangerously-skip-permissions"
+      echo "    claude claude --dangerously-skip-permissions"
       echo "    iw     cd .../imagine-worlds       Jump to Imagine Worlds project"
       echo "    mhs    rl --editor run             Checkout stable tag & run UE editor"
       echo "    mhe    cd .../ouro/mhe             Jump to MHE project root"

@@ -155,7 +155,7 @@ Installed only on work machines, in a separate guard block.
 
 | Alias | Command |
 |-------|---------|
-| `claude` | `cd ~/dev && claude --dangerously-skip-permissions` (overrides base alias) |
+| `claude` | `claude --dangerously-skip-permissions` (overrides base alias) |
 | `iw` | Jump to Imagine Worlds project |
 | `mhs` | Checkout `remote/rl/worlds/stable` in fbsource and run UE editor |
 | `mhe` | Jump to MHE project root in fbsource |
