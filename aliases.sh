@@ -20,6 +20,7 @@ alias ...='cd ../..'
 alias home='cd ~'
 alias dev='cd ~/dev'
 alias projects='cd ~/dev/projects'
+alias setup-osx='cd ~/dev/projects/personal/setup-osx'
 
 # Python / uv
 alias uvr='uv run'
@@ -59,6 +60,7 @@ help() {
       echo "    home   cd ~                        Jump to home directory"
       echo "    dev    cd ~/dev                    Jump to dev directory"
       echo "    projects  cd ~/dev/projects        Jump to projects directory"
+      echo "    setup-osx  cd .../setup-osx         Jump to setup-osx project"
       echo ""
       echo "  \033[1;36mPython / uv\033[0m"
       echo "    uvr    uv run                      Run command in project venv"
@@ -75,6 +77,8 @@ help() {
       echo "    zshrc  open ~/.zshrc               Edit shell config in Sublime"
       echo ""
       echo "  \033[1;36mWork (Meta)\033[0m"
+      echo "    claude cd ~/dev && claude --dangerously-skip-permissions"
+      echo "    iw     cd .../imagine-worlds       Jump to Imagine Worlds project"
       echo "    mhs    rl --editor run             Checkout stable tag & run UE editor"
       echo "    mhe    cd .../ouro/mhe             Jump to MHE project root"
       echo "    oma    cd .../ouro_multiplayer_action  Jump to OMA blueprint"

@@ -115,6 +115,7 @@ After installing, run `source ~/.zshrc` or open a new terminal to activate them.
 | `home` | `cd ~` |
 | `dev` | `cd ~/dev` |
 | `projects` | `cd ~/dev/projects` |
+| `setup-osx` | `cd ~/dev/projects/personal/setup-osx` |
 
 ### Python / uv
 
@@ -154,6 +155,8 @@ Installed only on work machines, in a separate guard block.
 
 | Alias | Command |
 |-------|---------|
+| `claude` | `cd ~/dev && claude --dangerously-skip-permissions` (overrides base alias) |
+| `iw` | Jump to Imagine Worlds project |
 | `mhs` | Checkout `remote/rl/worlds/stable` in fbsource and run UE editor |
 | `mhe` | Jump to MHE project root in fbsource |
 | `oma` | Jump to OMA blueprint directory |

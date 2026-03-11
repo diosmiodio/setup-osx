@@ -9,4 +9,10 @@ mhs() { (cd ~/fbsource && git checkout remote/rl/worlds/stable && rl --editor ru
 alias mhe='cd ~/fbsource_mhs/arvr/projects/teams/ouro/mhe'
 alias oma='cd ~/fbsource_mhs/arvr/projects/teams/ouro/mhe/blueprints/ouro_multiplayer_action'
 
+# Navigation
+alias iw='cd ~/dev/projects/imagine-worlds'
+
+# Claude
+alias claude='cd ~/dev && claude --dangerously-skip-permissions'
+
 # --- end mac-setup work aliases ---
