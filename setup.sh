@@ -344,6 +344,25 @@ configure_rectangle_pro() {
     mark_installed
 }
 
+configure_iterm() {
+    local plist="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
+    local current
+    current="$(/usr/libexec/PlistBuddy -c "Print :'New Bookmarks':0:'Title Components'" "$plist" 2>/dev/null)"
+
+    # Title Components bitmask: 1=Session Name, 2=Job
+    # Default (unset or 3) shows "Session Name (Job)"; set to 0 for clean tabs
+    if [[ "$current" == "0" ]]; then
+        log_skip
+        return
+    fi
+
+    /usr/libexec/PlistBuddy -c "Delete :'New Bookmarks':0:'Title Components'" "$plist" 2>/dev/null
+    /usr/libexec/PlistBuddy -c "Add :'New Bookmarks':0:'Title Components' integer 0" "$plist"
+
+    log "Complete."
+    mark_installed
+}
+
 configure_git_defaults() {
     local editor branch_changed=false editor_changed=false
 
@@ -419,6 +438,7 @@ pref_steps=(
     "custom:finder"
     "custom:sound"
     "custom:dock"
+    "custom:iterm"
     "custom:steermouse"
     "custom:rectangle-pro"
 )
@@ -442,6 +462,7 @@ run_step() {
                 finder)         configure_finder ;;
                 sound)          configure_sound ;;
                 dock)           configure_dock ;;
+                iterm)          configure_iterm ;;
                 steermouse)     configure_steermouse ;;
                 rectangle-pro)  configure_rectangle_pro ;;
             esac

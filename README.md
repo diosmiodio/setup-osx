@@ -80,6 +80,7 @@ All personal options plus additional work-specific categories:
 | Finder | Show path bar, show hidden files, list view, clear `.DS_Store` overrides |
 | Sound | Enable volume change feedback sound |
 | Dock | Instant auto-hide delay, animation duration 0.35s |
+| iTerm2 | Clean tab titles (disables default "Session Name (Job)") |
 | SteerMouse | Imports saved mouse button and scroll preferences |
 | Rectangle Pro | Restores window management config from saved JSON |
 
