@@ -147,7 +147,8 @@ After installing, run `source ~/.zshrc` or open a new terminal to activate them.
 
 | Alias | Command |
 |-------|---------|
-| `claude` | `cd ~/dev && claude` |
+| `cl` | `clear && claude` |
+| `cld` | `clear && claude --dangerously-skip-permissions` |
 
 ### Misc
 
@@ -172,7 +173,6 @@ Installed only on work machines, in a separate guard block.
 
 | Alias | Command |
 |-------|---------|
-| `claude` | `claude --dangerously-skip-permissions` (overrides base alias) |
 | `iw` | Jump to Imagine Worlds project |
 | `iwc` | Jump to Imagine Worlds, clear, and start Claude |
 | `mhs` | Checkout `remote/rl/worlds/stable` in fbsource and run UE editor |

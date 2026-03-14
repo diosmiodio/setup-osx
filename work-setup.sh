@@ -62,7 +62,12 @@ install_work_aliases() {
         log "Adding work aliases to ~/.zshrc..."
     fi
 
-    cat "$script_dir/aliases-work.sh" >> "$zshrc"
+    # Insert work aliases after personal aliases block (so work overrides win)
+    if grep -q "# --- end mac-setup aliases ---" "$zshrc" 2>/dev/null; then
+        sed -i '' "/^# --- end mac-setup aliases ---$/r $script_dir/aliases-work.sh" "$zshrc"
+    else
+        cat "$script_dir/aliases-work.sh" >> "$zshrc"
+    fi
     log "Complete."
     mark_installed
 }

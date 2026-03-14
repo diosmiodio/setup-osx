@@ -13,7 +13,7 @@ alias oma='cd ~/fbsource_mhs/arvr/projects/teams/ouro/mhe/blueprints/ouro_multip
 alias iw='cd ~/dev/projects/imagine-worlds'
 
 # Claude
-alias claude='claude --dangerously-skip-permissions'
+alias cld='clear && claude --dangerously-skip-permissions'
 alias iwc='cd ~/dev/projects/imagine-worlds && clear && claude --dangerously-skip-permissions'
 
 # --- end mac-setup work aliases ---

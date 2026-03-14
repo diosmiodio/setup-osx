@@ -9,7 +9,8 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(atuin init zsh)"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(fzf --zsh)"
+export FZF_DEFAULT_OPTS='--bind tab:accept'
 
 # Git
 alias gs='git status'
@@ -44,7 +45,8 @@ alias py='python3'
 alias cat='bat'
 
 # Claude
-alias claude='cd ~/dev && claude'
+alias cl='clear && claude'
+alias cld='clear && claude --dangerously-skip-permissions'
 
 # Misc
 alias c='clear'
@@ -92,7 +94,8 @@ help() {
       echo "    cat    bat                         Cat with syntax highlighting"
       echo ""
       echo "  \033[1;36mClaude\033[0m"
-      echo "    claude cd ~/dev && claude          Open Claude Code in ~/dev"
+      echo "    cl     clear && claude             Clear and start Claude Code"
+      echo "    cld    clear && claude --dangerously-skip-permissions"
       echo ""
       echo "  \033[1;36mMisc\033[0m"
       echo "    c      clear                       Clear terminal"
@@ -103,10 +106,10 @@ help() {
       echo "    starship   Custom prompt"
       echo "    zoxide     Smart cd (aliased to cd)"
       echo "    atuin      Searchable shell history (Up arrow)"
-      echo "    fzf        Fuzzy finder (Ctrl+R)"
+      echo "    fzf        Fuzzy finder (Ctrl+R, Tab to accept)"
       echo ""
       echo "  \033[1;36mWork (Meta)\033[0m"
-      echo "    claude claude --dangerously-skip-permissions"
+      echo "    cld    clear + claude --dangerously-skip-permissions"
       echo "    iw     cd .../imagine-worlds       Jump to Imagine Worlds project"
       echo "    iwc    cd + clear + claude          Jump to IW and start Claude"
       echo "    mhs    rl --editor run             Checkout stable tag & run UE editor"
