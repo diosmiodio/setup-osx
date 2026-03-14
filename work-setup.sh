@@ -22,6 +22,34 @@ clone_fbsource() {
     fi
 }
 
+configure_claude_work() {
+    local settings="$HOME/.claude/settings.json"
+
+    if [[ ! -f "$settings" ]] || ! command -v jq &>/dev/null; then
+        log "Skipping (no settings.json or jq missing)."
+        mark_skipped
+        return
+    fi
+
+    # Check if already using the work plugin
+    local has_work_plugin
+    has_work_plugin=$(jq -r '.enabledPlugins["superpowers@claude-templates"] // false' "$settings" 2>/dev/null)
+    if [[ "$has_work_plugin" == "true" ]]; then
+        log_skip
+        return
+    fi
+
+    # Swap personal plugin for work plugin
+    local tmp="$settings.tmp"
+    jq '
+      del(.enabledPlugins["superpowers@claude-plugins-official"])
+      | .enabledPlugins["superpowers@claude-templates"] = true
+    ' "$settings" > "$tmp" && mv "$tmp" "$settings"
+
+    log "Complete."
+    mark_installed
+}
+
 install_work_aliases() {
     local zshrc="$HOME/.zshrc"
     local script_dir
@@ -46,6 +74,7 @@ work_app_steps=(
 )
 
 work_pref_steps=(
+    "custom:claude-work"
     "custom:work-aliases"
 )
 
@@ -61,6 +90,7 @@ run_work_step() {
         custom)
             case "$name" in
                 fbsource)     clone_fbsource ;;
+                claude-work)  configure_claude_work ;;
                 work-aliases) install_work_aliases ;;
             esac
             ;;

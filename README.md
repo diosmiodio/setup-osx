@@ -89,6 +89,7 @@ All personal options plus additional work-specific categories:
 | Dock | Instant auto-hide delay, animation duration 0.35s |
 | iTerm2 | Clean tab titles (disables default "Session Name (Job)") |
 | Ghostty | Writes config with Cmd+I for tab rename, opacity, blur |
+| Claude Code | Status line, global commands (/auto, /review, /submit), worktree hooks |
 | SteerMouse | Imports saved mouse button and scroll preferences |
 | Rectangle Pro | Restores window management config from saved JSON |
 
@@ -216,6 +217,7 @@ aliases.sh        Personal shell aliases (appended to ~/.zshrc)
 aliases-work.sh   Work shell aliases (appended to ~/.zshrc)
 aliases.md        Alias and CLI tools reference
 _preferences/     Saved app configs restored during Preferences setup
+_claude/          Claude Code global config (statusline, commands, hooks)
 ```
 
 ## Re-running

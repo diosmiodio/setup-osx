@@ -393,6 +393,107 @@ GHOSTTY_EOF
     mark_installed
 }
 
+configure_claude() {
+    local script_dir
+    script_dir="$(cd "$(dirname "$0")" && pwd)"
+    local src_dir="$script_dir/_claude"
+    local dest_dir="$HOME/.claude"
+    local changed=false
+
+    # Copy statusline
+    mkdir -p "$dest_dir"
+    if ! cmp -s "$src_dir/statusline.sh" "$dest_dir/statusline.sh" 2>/dev/null; then
+        cp "$src_dir/statusline.sh" "$dest_dir/statusline.sh"
+        chmod +x "$dest_dir/statusline.sh"
+        changed=true
+    fi
+
+    # Copy commands
+    mkdir -p "$dest_dir/commands"
+    for cmd in "$src_dir/commands/"*.md; do
+        local name
+        name="$(basename "$cmd")"
+        if ! cmp -s "$cmd" "$dest_dir/commands/$name" 2>/dev/null; then
+            cp "$cmd" "$dest_dir/commands/$name"
+            changed=true
+        fi
+    done
+
+    # Copy hooks
+    mkdir -p "$dest_dir/hooks"
+    for hook in "$src_dir/hooks/"*.sh; do
+        local name
+        name="$(basename "$hook")"
+        if ! cmp -s "$hook" "$dest_dir/hooks/$name" 2>/dev/null; then
+            cp "$hook" "$dest_dir/hooks/$name"
+            chmod +x "$dest_dir/hooks/$name"
+            changed=true
+        fi
+    done
+
+    # Merge status line, hooks, and superpowers plugin into settings.json (preserves existing keys)
+    local settings="$dest_dir/settings.json"
+    if [[ -f "$settings" ]] && command -v jq &>/dev/null; then
+        local needs_update=false
+
+        # Check if statusLine is already set
+        local has_statusline
+        has_statusline=$(jq 'has("statusLine")' "$settings" 2>/dev/null || echo "false")
+        if [[ "$has_statusline" != "true" ]]; then
+            needs_update=true
+        fi
+
+        # Check if superpowers plugin is set (either source)
+        local has_superpowers
+        has_superpowers=$(jq '(.enabledPlugins["superpowers@claude-plugins-official"] // false) or (.enabledPlugins["superpowers@claude-templates"] // false)' "$settings" 2>/dev/null || echo "false")
+        if [[ "$has_superpowers" != "true" ]]; then
+            needs_update=true
+        fi
+
+        if [[ "$needs_update" == "true" ]]; then
+            local tmp="$settings.tmp"
+            jq '
+              .enabledPlugins["superpowers@claude-plugins-official"] = true
+              | .statusLine = {
+                "type": "command",
+                "command": "~/.claude/statusline.sh"
+              }
+              | .hooks.SessionStart = ((.hooks.SessionStart // []) + [{
+                "matcher": "startup|clear",
+                "hooks": [{
+                  "type": "command",
+                  "command": "~/.claude/hooks/clear-worktree-skip.sh"
+                }]
+              }])
+              | .hooks.PreToolUse = ((.hooks.PreToolUse // []) + [
+                {
+                  "matcher": "Edit|Write",
+                  "hooks": [{
+                    "type": "command",
+                    "command": "~/.claude/hooks/suggest-worktree.sh"
+                  }]
+                },
+                {
+                  "matcher": "Bash",
+                  "hooks": [{
+                    "type": "command",
+                    "command": "~/.claude/hooks/enforce-submit.sh"
+                  }]
+                }
+              ])
+            ' "$settings" > "$tmp" && mv "$tmp" "$settings"
+            changed=true
+        fi
+    fi
+
+    if $changed; then
+        log "Complete."
+        mark_installed
+    else
+        log_skip
+    fi
+}
+
 configure_iterm() {
     local plist="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
     local current
@@ -496,6 +597,7 @@ pref_steps=(
     "custom:dock"
     "custom:iterm"
     "custom:ghostty"
+    "custom:claude"
     "custom:steermouse"
     "custom:rectangle-pro"
 )
@@ -522,6 +624,7 @@ run_step() {
                 dock)           configure_dock ;;
                 iterm)          configure_iterm ;;
                 ghostty)        configure_ghostty ;;
+                claude)         configure_claude ;;
                 steermouse)     configure_steermouse ;;
                 rectangle-pro)  configure_rectangle_pro ;;
             esac
