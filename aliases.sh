@@ -10,7 +10,6 @@ eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(atuin init zsh)"
 eval "$(fzf --zsh)"
-export FZF_DEFAULT_OPTS='--bind tab:accept'
 
 # Git
 alias gs='git status'
@@ -55,6 +54,9 @@ alias zshrc='open ~/.zshrc -a "Sublime Text"'
 
 # Key Bindings
 bindkey '^[[A' atuin-up-search
+
+# Tab accepts autosuggestion if visible, otherwise does normal completion
+bindkey '\t' autosuggest-accept
 
 # Help
 help() {
