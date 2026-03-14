@@ -121,6 +121,7 @@ get_app_name() {
         sublime-text)  echo "Sublime Text.app" ;;
         ticktick)      echo "TickTick.app" ;;
         iterm2)        echo "iTerm.app" ;;
+        ghostty)       echo "Ghostty.app" ;;
         blender)       echo "Blender.app" ;;
         godot)         echo "Godot.app" ;;
         figma)         echo "Figma.app" ;;
@@ -344,6 +345,54 @@ configure_rectangle_pro() {
     mark_installed
 }
 
+setup_zsh_plugins() {
+    local changed=false
+    mkdir -p ~/.zsh
+
+    if [ ! -d "$HOME/.zsh/zsh-autosuggestions" ]; then
+        log "Cloning zsh-autosuggestions..."
+        git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions &>/dev/null
+        changed=true
+    fi
+
+    if [ ! -d "$HOME/.zsh/zsh-syntax-highlighting" ]; then
+        log "Cloning zsh-syntax-highlighting..."
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting &>/dev/null
+        changed=true
+    fi
+
+    if $changed; then
+        log "Complete."
+        mark_installed
+    else
+        log_skip
+    fi
+}
+
+configure_ghostty() {
+    local config_dir="$HOME/.config/ghostty"
+    local config_file="$config_dir/config"
+
+    mkdir -p "$config_dir"
+
+    cat << 'GHOSTTY_EOF' > "$config_file"
+# Appearance
+theme = TokyoNight
+font-size = 14
+window-padding-x = 8
+window-padding-y = 4
+background-opacity = 0.95
+background-blur = true
+window-save-state = always
+
+# Tab title rename (Cmd+I, like iTerm2)
+keybind = cmd+i=prompt_tab_title
+GHOSTTY_EOF
+
+    log "Complete."
+    mark_installed
+}
+
 configure_iterm() {
     local plist="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
     local current
@@ -412,6 +461,7 @@ app_steps=(
     "cask:sublime-text"
     "cask:ticktick"
     "cask:iterm2"
+    "cask:ghostty"
     "cask:blender"
     "cask:godot"
     "cask:figma"
@@ -426,6 +476,11 @@ app_steps=(
     "formula:jq"
     "formula:ripgrep"
     "formula:fzf"
+    "formula:eza"
+    "formula:bat"
+    "formula:starship"
+    "formula:atuin"
+    "formula:zoxide"
     # Custom
     "custom:uv"
     "custom:nvm"
@@ -433,12 +488,14 @@ app_steps=(
 )
 
 pref_steps=(
+    "custom:zsh-plugins"
     "custom:git-defaults"
     "custom:aliases"
     "custom:finder"
     "custom:sound"
     "custom:dock"
     "custom:iterm"
+    "custom:ghostty"
     "custom:steermouse"
     "custom:rectangle-pro"
 )
@@ -457,12 +514,14 @@ run_step() {
                 uv)             install_uv ;;
                 nvm)            install_nvm ;;
                 claude-code)    install_claude_code ;;
+                zsh-plugins)    setup_zsh_plugins ;;
                 git-defaults)   configure_git_defaults ;;
                 aliases)        install_aliases ;;
                 finder)         configure_finder ;;
                 sound)          configure_sound ;;
                 dock)           configure_dock ;;
                 iterm)          configure_iterm ;;
+                ghostty)        configure_ghostty ;;
                 steermouse)     configure_steermouse ;;
                 rectangle-pro)  configure_rectangle_pro ;;
             esac

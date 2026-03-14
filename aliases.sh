@@ -1,6 +1,16 @@
 
 # --- mac-setup aliases ---
 
+# Zsh Plugins
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Tool Initializations
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+eval "$(atuin init zsh)"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # Git
 alias gs='git status'
 alias ga='git add'
@@ -13,20 +23,25 @@ alias gb='git branch'
 alias glog='git log --oneline --graph'
 
 # Navigation
-alias ll='ls -la'
-alias la='ls -A'
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -lh --icons --grid'
+alias la='eza -A --icons'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias home='cd ~'
 alias dev='cd ~/dev'
 alias projects='cd ~/dev/projects'
 alias setup-osx='cd ~/dev/projects/personal/setup-osx'
+alias cd='z'
 
 # Python / uv
 alias uvr='uv run'
 alias uvi='uv init'
 alias uva='uv add'
 alias py='python3'
+
+# Modern CLI
+alias cat='bat'
 
 # Claude
 alias claude='cd ~/dev && claude'
@@ -35,6 +50,9 @@ alias claude='cd ~/dev && claude'
 alias c='clear'
 alias reload='source ~/.zshrc'
 alias zshrc='open ~/.zshrc -a "Sublime Text"'
+
+# Key Bindings
+bindkey '^[[A' atuin-up-search
 
 # Help
 help() {
@@ -53,20 +71,25 @@ help() {
       echo "    glog   git log --oneline --graph   Compact visual commit history"
       echo ""
       echo "  \033[1;36mNavigation\033[0m"
-      echo "    ll     ls -la                      List all files in long format"
-      echo "    la     ls -A                       List all including hidden"
+      echo "    ls     eza --icons                 List files with icons"
+      echo "    ll     eza -lh --icons --grid      Long list with icons and grid"
+      echo "    la     eza -A --icons              List all including hidden"
       echo "    ..     cd ..                       Go up one directory"
       echo "    ...    cd ../..                    Go up two directories"
       echo "    home   cd ~                        Jump to home directory"
       echo "    dev    cd ~/dev                    Jump to dev directory"
       echo "    projects  cd ~/dev/projects        Jump to projects directory"
       echo "    setup-osx  cd .../setup-osx         Jump to setup-osx project"
+      echo "    cd     z (zoxide)                  Smart directory jumping"
       echo ""
       echo "  \033[1;36mPython / uv\033[0m"
       echo "    uvr    uv run                      Run command in project venv"
       echo "    uvi    uv init                     Initialize a new Python project"
       echo "    uva    uv add                      Add a dependency"
       echo "    py     python3                     Shortcut for python3"
+      echo ""
+      echo "  \033[1;36mModern CLI\033[0m"
+      echo "    cat    bat                         Cat with syntax highlighting"
       echo ""
       echo "  \033[1;36mClaude\033[0m"
       echo "    claude cd ~/dev && claude          Open Claude Code in ~/dev"
@@ -76,9 +99,16 @@ help() {
       echo "    reload source ~/.zshrc             Reload shell config"
       echo "    zshrc  open ~/.zshrc               Edit shell config in Sublime"
       echo ""
+      echo "  \033[1;36mShell Tools\033[0m"
+      echo "    starship   Custom prompt"
+      echo "    zoxide     Smart cd (aliased to cd)"
+      echo "    atuin      Searchable shell history (Up arrow)"
+      echo "    fzf        Fuzzy finder (Ctrl+R)"
+      echo ""
       echo "  \033[1;36mWork (Meta)\033[0m"
       echo "    claude claude --dangerously-skip-permissions"
       echo "    iw     cd .../imagine-worlds       Jump to Imagine Worlds project"
+      echo "    iwc    cd + clear + claude          Jump to IW and start Claude"
       echo "    mhs    rl --editor run             Checkout stable tag & run UE editor"
       echo "    mhe    cd .../ouro/mhe             Jump to MHE project root"
       echo "    oma    cd .../ouro_multiplayer_action  Jump to OMA blueprint"
@@ -100,7 +130,7 @@ help() {
       ;;
     jq)
       echo ""
-      echo "  \033[1;36mjq — JSON processor\033[0m"
+      echo "  \033[1;36mjq -- JSON processor\033[0m"
       echo ""
       echo "  Pretty-print JSON:"
       echo "    curl -s https://api.example.com/data | jq ."
@@ -114,7 +144,7 @@ help() {
       ;;
     rg|ripgrep)
       echo ""
-      echo "  \033[1;36mripgrep (rg) — fast code search\033[0m"
+      echo "  \033[1;36mripgrep (rg) -- fast code search\033[0m"
       echo ""
       echo "  Search for a string:"
       echo "    rg \"TODO\""
@@ -131,7 +161,7 @@ help() {
       ;;
     fzf)
       echo ""
-      echo "  \033[1;36mfzf — fuzzy finder\033[0m"
+      echo "  \033[1;36mfzf -- fuzzy finder\033[0m"
       echo ""
       echo "  Fuzzy find a file:"
       echo "    fzf"
@@ -148,7 +178,7 @@ help() {
       ;;
     gh|github)
       echo ""
-      echo "  \033[1;36mgh — GitHub CLI\033[0m"
+      echo "  \033[1;36mgh -- GitHub CLI\033[0m"
       echo ""
       echo "  Clone a repo:"
       echo "    gh repo clone owner/repo"
@@ -168,7 +198,7 @@ help() {
       ;;
     uv)
       echo ""
-      echo "  \033[1;36muv — Python package manager\033[0m"
+      echo "  \033[1;36muv -- Python package manager\033[0m"
       echo ""
       echo "  Create a new project:"
       echo "    uv init my-project"

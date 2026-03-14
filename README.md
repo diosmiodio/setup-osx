@@ -49,6 +49,7 @@ All personal options plus additional work-specific categories:
 | Sublime Text | `sublime-text` |
 | TickTick | `ticktick` |
 | iTerm2 | `iterm2` |
+| Ghostty | `ghostty` |
 | Blender | `blender` |
 | Godot | `godot` |
 | Figma | `figma` |
@@ -67,6 +68,11 @@ All personal options plus additional work-specific categories:
 | `jq` | JSON processor |
 | `ripgrep` (`rg`) | Fast code search |
 | `fzf` | Fuzzy finder |
+| `eza` | Modern `ls` with icons and git integration |
+| `bat` | Modern `cat` with syntax highlighting |
+| `starship` | Minimal, fast shell prompt |
+| `atuin` | Searchable shell history |
+| `zoxide` | Smart `cd` that learns your directories |
 | `uv` | Python package/project manager |
 | `nvm` + Node.js LTS | Node version manager |
 | Claude Code | Anthropic's CLI for Claude |
@@ -75,18 +81,20 @@ All personal options plus additional work-specific categories:
 
 | Setting | Details |
 |---------|---------|
+| Zsh plugins | Clones zsh-autosuggestions and zsh-syntax-highlighting |
 | Git defaults | Default branch `main`, editor `nano` |
-| Shell aliases | Appended to `~/.zshrc` (see [Aliases](#aliases) below) |
+| Shell aliases | Appended to `~/.zshrc` with tool inits (see [Aliases](#aliases) below) |
 | Finder | Show path bar, show hidden files, list view, clear `.DS_Store` overrides |
 | Sound | Enable volume change feedback sound |
 | Dock | Instant auto-hide delay, animation duration 0.35s |
 | iTerm2 | Clean tab titles (disables default "Session Name (Job)") |
+| Ghostty | Writes config with Cmd+I for tab rename, opacity, blur |
 | SteerMouse | Imports saved mouse button and scroll preferences |
 | Rectangle Pro | Restores window management config from saved JSON |
 
 ## Aliases
 
-The setup installs shell aliases into `~/.zshrc` wrapped in guard comments so they can be updated on re-run without duplication.
+The setup installs shell aliases and tool initializations (starship, zoxide, atuin, fzf, zsh plugins) into `~/.zshrc` wrapped in guard comments so they can be updated on re-run without duplication.
 
 After installing, run `source ~/.zshrc` or open a new terminal to activate them.
 
@@ -108,14 +116,22 @@ After installing, run `source ~/.zshrc` or open a new terminal to activate them.
 
 | Alias | Command |
 |-------|---------|
-| `ll` | `ls -la` |
-| `la` | `ls -A` |
+| `ls` | `eza --icons --group-directories-first` |
+| `ll` | `eza -lh --icons --grid` |
+| `la` | `eza -A --icons` |
+| `cd` | `z` (zoxide smart jump) |
 | `..` | `cd ..` |
 | `...` | `cd ../..` |
 | `home` | `cd ~` |
 | `dev` | `cd ~/dev` |
 | `projects` | `cd ~/dev/projects` |
 | `setup-osx` | `cd ~/dev/projects/personal/setup-osx` |
+
+### Modern CLI
+
+| Alias | Command |
+|-------|---------|
+| `cat` | `bat` (syntax highlighting) |
 
 ### Python / uv
 
@@ -157,6 +173,7 @@ Installed only on work machines, in a separate guard block.
 |-------|---------|
 | `claude` | `claude --dangerously-skip-permissions` (overrides base alias) |
 | `iw` | Jump to Imagine Worlds project |
+| `iwc` | Jump to Imagine Worlds, clear, and start Claude |
 | `mhs` | Checkout `remote/rl/worlds/stable` in fbsource and run UE editor |
 | `mhe` | Jump to MHE project root in fbsource |
 | `oma` | Jump to OMA blueprint directory |

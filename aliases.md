@@ -2,6 +2,19 @@
 
 These aliases will be added to `~/.zshrc` by the setup script.
 
+## Shell Tools
+
+The following tools are initialized automatically when your shell starts:
+
+| Tool | What it does |
+|------|-------------|
+| Starship | Custom minimal prompt |
+| Zoxide | Smart `cd` that learns your most-used directories |
+| Atuin | Searchable shell history (replaces Up arrow) |
+| fzf | Fuzzy finder (Ctrl+R for history, Ctrl+T for files) |
+| zsh-autosuggestions | Inline command suggestions as you type |
+| zsh-syntax-highlighting | Syntax coloring for commands |
+
 ## Git
 
 | Alias | Command | Description |
@@ -20,12 +33,20 @@ These aliases will be added to `~/.zshrc` by the setup script.
 
 | Alias | Command | Description |
 |-------|---------|-------------|
-| `ll` | `ls -la` | List all files in long format |
-| `la` | `ls -A` | List all files including hidden |
+| `ls` | `eza --icons --group-directories-first` | List files with icons |
+| `ll` | `eza -lh --icons --grid` | Long list with icons and grid |
+| `la` | `eza -A --icons` | List all files including hidden |
+| `cd` | `z` (zoxide) | Smart directory jumping |
 | `..` | `cd ..` | Go up one directory |
 | `...` | `cd ../..` | Go up two directories |
 | `dev` | `cd ~/dev` | Jump to dev directory |
 | `projects` | `cd ~/dev/projects` | Jump to projects directory |
+
+## Modern CLI
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `cat` | `bat` | Cat with syntax highlighting and Git integration |
 
 ## Python / uv
 
@@ -48,9 +69,9 @@ These aliases will be added to `~/.zshrc` by the setup script.
 
 ## CLI Tools Reference
 
-These are installed by the setup script. Not aliases — standalone commands.
+These are installed by the setup script. Not aliases -- standalone commands.
 
-### jq — JSON processor
+### jq -- JSON processor
 
 Process and filter JSON from the command line.
 
@@ -65,7 +86,7 @@ echo '{"name": "Jo", "age": 30}' | jq '.name'
 cat data.json | jq '.users[] | select(.active == true)'
 ```
 
-### ripgrep (rg) — fast code search
+### ripgrep (rg) -- fast code search
 
 Search file contents recursively. Much faster than `grep`.
 
@@ -83,7 +104,7 @@ rg "error" -C 3
 rg -i "config"
 ```
 
-### fzf — fuzzy finder
+### fzf -- fuzzy finder
 
 Interactive fuzzy search. Integrates with your shell.
 
@@ -102,7 +123,7 @@ sublime $(fzf)
 rg --files | fzf
 ```
 
-### gh — GitHub CLI
+### gh -- GitHub CLI
 
 Manage GitHub repos, PRs, and issues from the terminal.
 
@@ -123,7 +144,7 @@ gh issue view 42
 gh repo create my-project --private
 ```
 
-### uv — Python package manager
+### uv -- Python package manager
 
 Fast Python project and dependency management.
 
