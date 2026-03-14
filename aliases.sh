@@ -9,7 +9,6 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(atuin init zsh)"
-eval "$(fzf --zsh)"
 
 # Git
 alias gs='git status'
@@ -108,7 +107,7 @@ help() {
       echo "    starship   Custom prompt"
       echo "    zoxide     Smart cd (aliased to cd)"
       echo "    atuin      Searchable shell history (Up arrow)"
-      echo "    fzf        Fuzzy finder (Ctrl+R, Tab to accept)"
+      echo "    fzf        Fuzzy finder (pipe: ls | fzf)"
       echo ""
       echo "  \033[1;36mWork (Meta)\033[0m"
       echo "    cld    clear + claude --dangerously-skip-permissions"
